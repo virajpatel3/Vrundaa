@@ -1,40 +1,681 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vrundaa</title>
-    <style>
-        @font-face {
-            font-family: 'Edwardian Script';
-            src: url('Edwardian Script.ttf') format('truetype');
-        }
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-        header {
-            background-color: #0B4008;
-            color: white;
-            padding: 20px;
-            text-align: center;
-        }
-        header h1 {
-            font-family: 'Edwardian Script', cursive;
-            font-size: 3rem; /* Adjust font size */
-            margin: 0;
-            color: yellow;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vrundaa — Hotelware & Kitchenware, Kolkata</title>
+<meta name="description" content="Vrundaa is a Kolkata-based wholesaler and retailer of hotelware, crockery, cutlery and kitchen equipment, trading since 1994.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,440;0,9..144,560;1,9..144,420&family=Work+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+  /* ===== Tokens ===== */
+  :root{
+    --bg:        #07140F;   /* near-black forest, base */
+    --panel:     #0E2419;   /* deep green panel */
+    --panel-2:   #122C20;   /* slightly raised panel */
+    --line:      #20402F;   /* hairline on dark */
+    --brass:     #C49A4A;   /* tarnished brass accent */
+    --brass-hi:  #E2C077;   /* brighter brass for hover/highlight */
+    --bone:      #F1ECDF;   /* bone-china ivory, primary text on dark */
+    --sage:      #93AE96;   /* secondary text */
+    --sage-dim:  #5E7A66;   /* tertiary / captions */
+    --shadow:    rgba(0,0,0,0.45);
+
+    --display: 'Fraunces', serif;
+    --body: 'Work Sans', sans-serif;
+    --mono: 'Space Mono', monospace;
+  }
+
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--bone);
+    font-family:var(--body);
+    font-weight:400;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  img,svg{ display:block; max-width:100%; }
+  a{ color:inherit; text-decoration:none; }
+  ::selection{ background:var(--brass); color:#0E2419; }
+
+  :focus-visible{
+    outline: 2px solid var(--brass-hi);
+    outline-offset: 3px;
+  }
+
+  /* faint pressed-grain backdrop, deep green throughout */
+  body{
+    background-image:
+      radial-gradient(ellipse 70% 50% at 80% -10%, rgba(196,154,74,0.07), transparent 60%),
+      radial-gradient(ellipse 60% 40% at 10% 0%, rgba(46,107,79,0.10), transparent 60%),
+      repeating-linear-gradient(0deg, rgba(255,255,255,0.012) 0px, rgba(255,255,255,0.012) 1px, transparent 1px, transparent 3px);
+    background-attachment: fixed;
+  }
+
+  .wrap{
+    max-width:1180px;
+    margin:0 auto;
+    padding:0 32px;
+  }
+
+  .eyebrow{
+    font-family:var(--mono);
+    font-size:12.5px;
+    letter-spacing:0.16em;
+    text-transform:uppercase;
+    color:var(--brass);
+  }
+
+  h1,h2,h3{
+    font-family:var(--display);
+    font-weight:560;
+    color:var(--bone);
+    margin:0;
+  }
+
+  /* ===== Header ===== */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(7,20,15,0.86);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:18px 32px;
+    max-width:1180px; margin:0 auto;
+  }
+  .brand{
+    font-family:var(--display);
+    font-size:22px;
+    letter-spacing:0.04em;
+    font-weight:560;
+    color:var(--bone);
+  }
+  .brand span{ color:var(--brass); }
+  .navlinks{
+    display:flex; gap:36px;
+    font-size:14.5px;
+    color:var(--sage);
+  }
+  .navlinks a{ transition:color .2s ease; }
+  .navlinks a:hover{ color:var(--brass-hi); }
+
+  .navcta{
+    font-family:var(--mono);
+    font-size:12.5px;
+    letter-spacing:0.06em;
+    color:var(--bone);
+    border:1px solid var(--brass);
+    padding:9px 16px;
+    border-radius:2px;
+    transition:background .2s ease, color .2s ease;
+  }
+  .navcta:hover{ background:var(--brass); color:#0E2419; }
+
+  #menu-toggle{ display:none; }
+  .burger{ display:none; cursor:pointer; }
+
+  /* ===== Hero ===== */
+  .hero{
+    position:relative;
+    padding:96px 0 90px;
+    overflow:hidden;
+    border-bottom:1px solid var(--line);
+  }
+  .hero-grid{
+    display:grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap:40px;
+    align-items:center;
+  }
+  .hero h1{
+    font-size:clamp(38px, 5vw, 60px);
+    line-height:1.06;
+    margin:18px 0 22px;
+    font-style:normal;
+  }
+  .hero h1 em{
+    font-style:italic;
+    font-weight:420;
+    color:var(--brass-hi);
+  }
+  .hero p{
+    color:var(--sage);
+    font-size:17px;
+    max-width:480px;
+    margin:0 0 32px;
+  }
+  .cta-row{ display:flex; gap:14px; flex-wrap:wrap; }
+  .btn{
+    font-family:var(--mono);
+    font-size:12.5px;
+    letter-spacing:0.06em;
+    padding:14px 22px;
+    border-radius:2px;
+    transition:transform .15s ease, background .2s ease, color .2s ease, border-color .2s ease;
+    display:inline-block;
+  }
+  .btn-solid{ background:var(--brass); color:#0E2419; border:1px solid var(--brass); }
+  .btn-solid:hover{ background:var(--brass-hi); transform:translateY(-1px); }
+  .btn-outline{ border:1px solid var(--sage-dim); color:var(--bone); }
+  .btn-outline:hover{ border-color:var(--brass); color:var(--brass-hi); transform:translateY(-1px); }
+
+  .hero-art{
+    position:relative;
+    display:flex; justify-content:center; align-items:center;
+    color:var(--brass);
+    opacity:0.92;
+  }
+  .hero-art svg{ width:100%; max-width:340px; }
+  .hero-art::after{
+    content:"";
+    position:absolute;
+    width:420px; height:420px;
+    background:radial-gradient(circle, rgba(196,154,74,0.14), transparent 70%);
+    z-index:-1;
+  }
+
+  /* ===== Strip ===== */
+  .strip{
+    background:var(--panel);
+    border-bottom:1px solid var(--line);
+    padding:18px 0;
+  }
+  .strip .wrap{
+    display:flex;
+    flex-wrap:wrap;
+    gap:28px;
+    justify-content:space-between;
+    font-family:var(--mono);
+    font-size:12px;
+    letter-spacing:0.07em;
+    color:var(--sage);
+    text-transform:uppercase;
+  }
+  .strip .wrap span{ color:var(--brass); }
+
+  /* ===== Section base ===== */
+  section{ padding:88px 0; }
+  .section-head{ max-width:620px; margin-bottom:52px; }
+  .section-head h2{
+    font-size:clamp(28px,3.4vw,38px);
+    margin-top:14px;
+    line-height:1.15;
+  }
+  .section-head p{
+    color:var(--sage);
+    font-size:16px;
+    margin-top:16px;
+  }
+
+  /* ===== About ===== */
+  .about{
+    background:var(--panel);
+    border-bottom:1px solid var(--line);
+  }
+  .about-grid{
+    display:grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap:56px;
+  }
+  .about-body p{ color:var(--sage); font-size:16px; margin:0 0 16px; }
+  .about-body p:last-child{ margin-bottom:0; }
+  .about-body strong{ color:var(--bone); font-weight:500; }
+
+  .stat-list{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap:1px;
+    background:var(--line);
+    border:1px solid var(--line);
+  }
+  .stat{
+    background:var(--bg);
+    padding:26px 22px;
+  }
+  .stat .num{
+    font-family:var(--display);
+    font-size:34px;
+    color:var(--brass-hi);
+    font-weight:560;
+  }
+  .stat .label{
+    font-family:var(--mono);
+    font-size:11.5px;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    color:var(--sage-dim);
+    margin-top:6px;
+  }
+
+  /* ===== Catalog ===== */
+  .catalog-grid{
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    gap:1px;
+    background:var(--line);
+    border:1px solid var(--line);
+  }
+  .card{
+    background:var(--bg);
+    padding:30px 26px 28px;
+    position:relative;
+    transition:background .25s ease;
+  }
+  .card:hover{ background:var(--panel-2); }
+  .card .ref{
+    font-family:var(--mono);
+    font-size:11px;
+    letter-spacing:0.08em;
+    color:var(--sage-dim);
+  }
+  .card .icon{
+    width:44px; height:44px;
+    color:var(--brass);
+    margin:18px 0 16px;
+    transition:color .25s ease;
+  }
+  .card:hover .icon{ color:var(--brass-hi); }
+  .card h3{
+    font-size:19px;
+    font-weight:500;
+    color:var(--bone);
+    margin-bottom:8px;
+  }
+  .card p{
+    font-size:14px;
+    color:var(--sage);
+    margin:0;
+  }
+
+  /* ===== Why ===== */
+  .why{ border-bottom:1px solid var(--line); }
+  .why-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:36px;
+  }
+  .why-item .mark{
+    font-family:var(--mono);
+    color:var(--brass);
+    font-size:13px;
+    border:1px solid var(--brass);
+    width:30px; height:30px;
+    display:flex; align-items:center; justify-content:center;
+    border-radius:50%;
+    margin-bottom:18px;
+  }
+  .why-item h3{
+    font-size:17px; font-weight:500; margin-bottom:8px;
+  }
+  .why-item p{ color:var(--sage); font-size:14.5px; margin:0; }
+
+  /* ===== Contact ===== */
+  .contact{ background:var(--panel); }
+  .contact-grid{
+    display:grid;
+    grid-template-columns: 0.9fr 1.1fr;
+    gap:48px;
+  }
+  .address-card{
+    background:var(--bg);
+    border:1px solid var(--line);
+    padding:32px;
+  }
+  .address-card .eyebrow{ margin-bottom:14px; display:block; }
+  .address-card .name{
+    font-family:var(--display);
+    font-size:21px;
+    color:var(--bone);
+    margin-bottom:10px;
+  }
+  .address-card address{
+    font-style:normal;
+    color:var(--sage);
+    font-size:15px;
+    line-height:1.7;
+  }
+  .address-card .divider{
+    height:1px; background:var(--line); margin:22px 0;
+  }
+  .contact-line{
+    display:flex; justify-content:space-between;
+    font-size:14.5px; color:var(--sage);
+    padding:6px 0;
+  }
+  .contact-line span:first-child{ color:var(--sage-dim); font-family:var(--mono); font-size:11.5px; letter-spacing:.05em; text-transform:uppercase; align-self:center;}
+  .contact-line span:last-child{ color:var(--bone); }
+
+  .enquire h3{
+    font-size:24px;
+    line-height:1.3;
+    margin-bottom:16px;
+  }
+  .enquire p{ color:var(--sage); margin-bottom:26px; max-width:440px; }
+  .enquire ul{
+    list-style:none; padding:0; margin:0 0 30px;
+    display:flex; flex-direction:column; gap:10px;
+  }
+  .enquire li{
+    color:var(--sage);
+    font-size:14.5px;
+    padding-left:18px;
+    position:relative;
+  }
+  .enquire li::before{
+    content:"—";
+    position:absolute; left:0; color:var(--brass);
+  }
+
+  /* ===== Footer ===== */
+  footer{
+    padding:32px 0;
+    border-top:1px solid var(--line);
+  }
+  footer .wrap{
+    display:flex; justify-content:space-between; align-items:center;
+    flex-wrap:wrap; gap:14px;
+  }
+  footer .fbrand{
+    font-family:var(--display); color:var(--sage); font-size:15px;
+  }
+  footer .fmeta{
+    font-family:var(--mono); font-size:11.5px; color:var(--sage-dim); letter-spacing:.04em;
+  }
+
+  /* ===== Reduced motion ===== */
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior:auto; }
+    *{ transition:none !important; }
+  }
+
+  /* ===== Responsive ===== */
+  @media (max-width: 900px){
+    .hero-grid{ grid-template-columns:1fr; }
+    .hero-art{ order:-1; }
+    .hero-art svg{ max-width:220px; }
+    .about-grid{ grid-template-columns:1fr; }
+    .catalog-grid{ grid-template-columns:repeat(2,1fr); }
+    .why-grid{ grid-template-columns:repeat(2,1fr); gap:30px; }
+    .contact-grid{ grid-template-columns:1fr; }
+    .navlinks{ display:none; }
+    .burger{ display:block; }
+  }
+  @media (max-width:560px){
+    .wrap{ padding:0 20px; }
+    .nav{ padding:16px 20px; }
+    .catalog-grid{ grid-template-columns:1fr; }
+    .why-grid{ grid-template-columns:1fr; }
+    .stat-list{ grid-template-columns:1fr; }
+    .strip .wrap{ font-size:11px; gap:14px; }
+  }
+</style>
 </head>
 <body>
+
+<!-- SVG icon defs, reused via <use> -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+
+    <symbol id="ic-chafing" viewBox="0 0 64 64">
+      <ellipse cx="32" cy="22" rx="20" ry="7" stroke="currentColor" stroke-width="1.6" fill="none"/>
+      <path d="M12 22 C12 32, 18 36, 32 36 C46 36, 52 32, 52 22" stroke="currentColor" stroke-width="1.6" fill="none"/>
+      <circle cx="32" cy="14" r="2.4" stroke="currentColor" stroke-width="1.4" fill="none"/>
+      <rect x="14" y="36" width="36" height="9" rx="1.5" stroke="currentColor" stroke-width="1.6" fill="none"/>
+      <line x1="20" y1="45" x2="16" y2="54" stroke="currentColor" stroke-width="1.6"/>
+      <line x1="44" y1="45" x2="48" y2="54" stroke="currentColor" stroke-width="1.6"/>
+    </symbol>
+
+    <symbol id="ic-bowl" viewBox="0 0 64 64">
+      <ellipse cx="32" cy="26" rx="22" ry="6" stroke="currentColor" stroke-width="1.6" fill="none"/>
+      <path d="M10 26 C10 38, 19 46, 32 46 C45 46, 54 38, 54 26" stroke="currentColor" stroke-width="1.6" fill="none"/>
+      <ellipse cx="32" cy="26" rx="14" ry="3" stroke="currentColor" stroke-width="1.2" fill="none" opacity="0.6"/>
+    </symbol>
+
+    <symbol id="ic-cutlery" viewBox="0 0 64 64">
+      <line x1="20" y1="10" x2="20" y2="54" stroke="currentColor" stroke-width="1.6"/>
+      <line x1="14" y1="10" x2="14" y2="24" stroke="currentColor" stroke-width="1.4"/>
+      <line x1="20" y1="10" x2="20" y2="24" stroke="currentColor" stroke-width="1.4"/>
+      <line x1="26" y1="10" x2="26" y2="24" stroke="currentColor" stroke-width="1.4"/>
+      <path d="M14 10 C14 18, 26 18, 26 10" stroke="currentColor" stroke-width="1.4" fill="none"/>
+      <path d="M44 10 C36 10, 36 22, 44 24 L44 54" stroke="currentColor" stroke-width="1.6" fill="none"/>
+    </symbol>
+
+    <symbol id="ic-bar" viewBox="0 0 64 64">
+      <path d="M22 10 H42 L37 28 V46 C37 50, 27 50, 27 46 V28 Z" stroke="currentColor" stroke-width="1.6" fill="none"/>
+      <line x1="23.5" y1="20" x2="40.5" y2="20" stroke="currentColor" stroke-width="1.3"/>
+      <line x1="20" y1="54" x2="44" y2="54" stroke="currentColor" stroke-width="1.6"/>
+      <line x1="32" y1="46" x2="32" y2="54" stroke="currentColor" stroke-width="1.6"/>
+    </symbol>
+
+    <symbol id="ic-mould" viewBox="0 0 64 64">
+      <circle cx="32" cy="32" r="20" stroke="currentColor" stroke-width="1.6" fill="none"/>
+      <circle cx="32" cy="32" r="9" stroke="currentColor" stroke-width="1.6" fill="none"/>
+      <path d="M32 12 L34 16 M48 21 L44 23 M48 43 L44 41 M32 52 L34 48 M16 43 L20 41 M16 21 L20 23" stroke="currentColor" stroke-width="1.3"/>
+    </symbol>
+
+    <symbol id="ic-tandoor" viewBox="0 0 64 64">
+      <path d="M22 14 C18 24, 18 40, 24 50 C28 56, 36 56, 40 50 C46 40, 46 24, 42 14" stroke="currentColor" stroke-width="1.6" fill="none"/>
+      <ellipse cx="32" cy="14" rx="10" ry="3.4" stroke="currentColor" stroke-width="1.6" fill="none"/>
+      <path d="M28 30 C28 24, 32 24, 31 18 M34 34 C34 28, 38 28, 36 22" stroke="currentColor" stroke-width="1.2" fill="none" opacity="0.75"/>
+    </symbol>
+
+    <symbol id="ic-knife" viewBox="0 0 64 64">
+      <path d="M14 40 L42 12 C46 8, 52 14, 48 18 L20 46 Z" stroke="currentColor" stroke-width="1.6" fill="none"/>
+      <line x1="14" y1="40" x2="9" y2="52" stroke="currentColor" stroke-width="1.8"/>
+      <line x1="20" y1="46" x2="15" y2="58" stroke="currentColor" stroke-width="1.8"/>
+    </symbol>
+
+    <symbol id="ic-bin" viewBox="0 0 64 64">
+      <path d="M18 18 L22 52 C22 55, 42 55, 42 52 L46 18" stroke="currentColor" stroke-width="1.6" fill="none"/>
+      <line x1="13" y1="18" x2="51" y2="18" stroke="currentColor" stroke-width="1.6"/>
+      <path d="M24 18 C24 12, 40 12, 40 18" stroke="currentColor" stroke-width="1.5" fill="none"/>
+      <line x1="27" y1="24" x2="29" y2="46" stroke="currentColor" stroke-width="1.2" opacity="0.6"/>
+      <line x1="37" y1="24" x2="35" y2="46" stroke="currentColor" stroke-width="1.2" opacity="0.6"/>
+    </symbol>
+
+  </defs>
+</svg>
+
 <header>
-    <h1>Vrundaa</h1>
+  <div class="nav">
+    <a href="#top" class="brand">VRUND<span>AA</span></a>
+    <input type="checkbox" id="menu-toggle">
+    <nav class="navlinks">
+      <a href="#about">About</a>
+      <a href="#catalog">Catalog</a>
+      <a href="#why">Why Us</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <a href="#contact" class="navcta">ENQUIRE WHOLESALE</a>
+  </div>
 </header>
+
+<main id="top">
+
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <div class="eyebrow">Established 1994 · Lal Bazar, Kolkata</div>
+        <h1>Hotelware &amp; kitchen<br>essentials, <em>wholesale</em><br>to the trade.</h1>
+        <p>Vrundaa supplies hotels, restaurants, caterers and banquet halls across India with chafing dishes, crockery, cutlery and kitchen equipment built for daily service — in volume, from one Lal Bazar counter.</p>
+        <div class="cta-row">
+          <a href="#contact" class="btn btn-solid">Enquire in Bulk</a>
+          <a href="#catalog" class="btn btn-outline">Browse the Catalog</a>
+        </div>
+      </div>
+      <div class="hero-art">
+        <svg viewBox="0 0 64 64"><use href="#ic-chafing"/></svg>
+      </div>
+    </div>
+  </section>
+
+  <div class="strip">
+    <div class="wrap">
+      <div><span>30+ Years</span> in the hospitality trade</div>
+      <div><span>8</span> core product categories</div>
+      <div><span>Pan-India</span> dispatch from Kolkata</div>
+      <div><span>Verified</span> trade seller</div>
+    </div>
+  </div>
+
+  <section class="about" id="about">
+    <div class="wrap about-grid">
+      <div>
+        <div class="eyebrow">About Vrundaa</div>
+        <h2>A Lal Bazar trade house, built on steel and service.</h2>
+        <div class="about-body" style="margin-top:24px;">
+          <p>Vrundaa is a Kolkata-based wholesaler, distributor and retailer of hotelware and kitchenware, operating out of Lal Bazar Street since <strong>1994</strong>. The firm stocks and supplies the equipment a working kitchen runs on — chafing dishes, crockery, bone china, cutlery, bar tools and bakeware — to hotels, restaurants, caterers and banquet halls.</p>
+          <p>Three decades on the same street have built a counter that hospitality buyers return to: practical stock, bulk pricing, and dispatch that reaches kitchens well beyond West Bengal.</p>
+        </div>
+      </div>
+      <div class="stat-list">
+        <div class="stat"><div class="num">1994</div><div class="label">Year established</div></div>
+        <div class="stat"><div class="num">8</div><div class="label">Product categories</div></div>
+        <div class="stat"><div class="num">700001</div><div class="label">Kolkata trade pin</div></div>
+        <div class="stat"><div class="num">∞</div><div class="label">Buyers served pan-India</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="catalog">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="eyebrow">The Catalog</div>
+        <h2>Eight categories, one counter.</h2>
+        <p>Everything is sold wholesale and stocked for repeat orders — ask for sizes, finishes and bulk rates not listed here.</p>
+      </div>
+
+      <div class="catalog-grid">
+        <div class="card">
+          <div class="ref">CAT. NO. 01</div>
+          <svg class="icon" viewBox="0 0 64 64"><use href="#ic-chafing"/></svg>
+          <h3>Chafing Dishes</h3>
+          <p>Round, oval and rectangular service dishes in steel and copper for buffets and banquets.</p>
+        </div>
+        <div class="card">
+          <div class="ref">CAT. NO. 02</div>
+          <svg class="icon" viewBox="0 0 64 64"><use href="#ic-bowl"/></svg>
+          <h3>Crockery &amp; Bone China</h3>
+          <p>Bowls, plates and serving ware for hotel and restaurant tables.</p>
+        </div>
+        <div class="card">
+          <div class="ref">CAT. NO. 03</div>
+          <svg class="icon" viewBox="0 0 64 64"><use href="#ic-cutlery"/></svg>
+          <h3>Cutlery &amp; Steel Utensils</h3>
+          <p>Stainless steel cutlery sets and kitchen utensils built for daily service.</p>
+        </div>
+        <div class="card">
+          <div class="ref">CAT. NO. 04</div>
+          <svg class="icon" viewBox="0 0 64 64"><use href="#ic-bar"/></svg>
+          <h3>Bar Accessories</h3>
+          <p>Shakers, jiggers and serving tools for hotel and restaurant bars.</p>
+        </div>
+        <div class="card">
+          <div class="ref">CAT. NO. 05</div>
+          <svg class="icon" viewBox="0 0 64 64"><use href="#ic-mould"/></svg>
+          <h3>Cake Moulds &amp; Bakeware</h3>
+          <p>Aluminium and silicone moulds for bakeries, hotels and catering kitchens.</p>
+        </div>
+        <div class="card">
+          <div class="ref">CAT. NO. 06</div>
+          <svg class="icon" viewBox="0 0 64 64"><use href="#ic-tandoor"/></svg>
+          <h3>Tandoors</h3>
+          <p>Indoor and outdoor tandoors for catering, banquet and restaurant kitchens.</p>
+        </div>
+        <div class="card">
+          <div class="ref">CAT. NO. 07</div>
+          <svg class="icon" viewBox="0 0 64 64"><use href="#ic-knife"/></svg>
+          <h3>Kitchen Knives</h3>
+          <p>Knife sets for commercial kitchens, built for repeat heavy use.</p>
+        </div>
+        <div class="card">
+          <div class="ref">CAT. NO. 08</div>
+          <svg class="icon" viewBox="0 0 64 64"><use href="#ic-bin"/></svg>
+          <h3>Dustbins &amp; Utility Ware</h3>
+          <p>Kitchen and hospitality dustbins in a range of sizes and finishes.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="why" id="why">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="eyebrow">Why Trade With Us</div>
+        <h2>Built for the volume hotels run on.</h2>
+      </div>
+      <div class="why-grid">
+        <div class="why-item">
+          <div class="mark">1</div>
+          <h3>Wholesale pricing</h3>
+          <p>Bulk rates for hotels, caterers, banquet halls and distributors.</p>
+        </div>
+        <div class="why-item">
+          <div class="mark">2</div>
+          <h3>Verified supplier</h3>
+          <p>Listed and verified across India's major B2B trade directories.</p>
+        </div>
+        <div class="why-item">
+          <div class="mark">3</div>
+          <h3>Pan-India dispatch</h3>
+          <p>Sourced and packed from Kolkata, shipped to kitchens nationwide.</p>
+        </div>
+        <div class="why-item">
+          <div class="mark">4</div>
+          <h3>Trade since 1994</h3>
+          <p>Three decades of stocking what working kitchens actually reorder.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact" id="contact">
+    <div class="wrap contact-grid">
+      <div class="address-card">
+        <span class="eyebrow">Visit / Write</span>
+        <div class="name">Vrundaa</div>
+        <address>
+          Mercantile Building, 9/12 Lal Bazar Street,<br>
+          Block A, 1st Floor, Room No. 1054A,<br>
+          Near Lal Bazar Police Station,<br>
+          Kolkata – 700001, West Bengal, India
+        </address>
+        <div class="divider"></div>
+        <!-- Placeholder contact details — replace with live phone, email and WhatsApp before publishing -->
+        <div class="contact-line"><span>Phone</span><span>+91 00000 00000</span></div>
+        <div class="contact-line"><span>Email</span><span>enquiries@vrundaa.example</span></div>
+        <div class="contact-line"><span>Hours</span><span>Mon–Sat, 10:30am–7:00pm</span></div>
+      </div>
+
+      <div class="enquire">
+        <span class="eyebrow">Place an Enquiry</span>
+        <h3>Tell us what your kitchen needs, and how many.</h3>
+        <p>Send your requirement with quantity, preferred finish and delivery city — we'll quote wholesale rates and dispatch timelines.</p>
+        <ul>
+          <li>Chafing dishes, crockery &amp; bone china, in bulk</li>
+          <li>Cutlery, bar tools, bakeware and tandoors</li>
+          <li>Custom quantities for hotels, caterers &amp; banquet halls</li>
+          <li>Dispatch tracked to any city in India</li>
+        </ul>
+        <a href="mailto:enquiries@vrundaa.example" class="btn btn-solid">Send Your Requirement</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
 <footer>
-    <p>Address: 1234 Vrundaa St, City, Country</p>
-    <p>Contact Us: contact@vrundaa.com</p>
+  <div class="wrap">
+    <div class="fbrand">Vrundaa</div>
+    <div class="fmeta">© 2026 VRUNDAA · HOTELWARE &amp; KITCHENWARE · KOLKATA, INDIA · TRADING SINCE 1994</div>
+  </div>
 </footer>
 
 </body>
